@@ -6,5 +6,6 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["activeTab", "cookies"]
+  "permissions": ["activeTab", "cookies", "tabs"],
+  "host_permissions": ["*://*.kakao.com/*", "*://*.daum.net/*"]
 }
