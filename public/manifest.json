@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "카카오맵 즐겨찾기 관리자",
+  "version": "1.0.0",
+  "description": "카카오맵 즐겨찾기 내보내기 및 가져오기를 도와주는 유틸리티",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["activeTab", "cookies"]
+}
