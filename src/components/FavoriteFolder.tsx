@@ -10,11 +10,15 @@ import {
 } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getFavoriteFolders, KakaoMapFolder } from '@/lib/api';
+import { FavoritePlaces } from './FavoritePlaces';
 
 export function FavoriteFolders() {
   const [folders, setFolders] = useState<KakaoMapFolder[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<KakaoMapFolder | null>(
+    null,
+  );
 
   const fetchFolders = async () => {
     setLoading(true);
@@ -35,6 +39,27 @@ export function FavoriteFolders() {
       setLoading(false);
     }
   };
+
+  // 폴더 선택 처리
+  const handleSelectFolder = (folder: KakaoMapFolder) => {
+    setSelectedFolder(folder);
+  };
+
+  // 폴더 목록으로 돌아가기
+  const handleBackToFolders = () => {
+    setSelectedFolder(null);
+  };
+
+  // 선택된 폴더가 있으면 해당 폴더의 즐겨찾기 목록 표시
+  if (selectedFolder) {
+    return (
+      <FavoritePlaces
+        folderId={selectedFolder.folderId}
+        folderTitle={selectedFolder.title}
+        onBack={handleBackToFolders}
+      />
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -69,13 +94,22 @@ export function FavoriteFolders() {
           {folders.map((folder) => (
             <Card key={folder.folderId} className="overflow-hidden">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-bold">
-                  {folder.title}
-                </CardTitle>
-                <CardDescription>장소 {folder.favoriteCount}개</CardDescription>
+                <CardTitle className="text-lg">{folder.title}</CardTitle>
+                <CardDescription>
+                  장소 {folder.favoriteCount || 0}개
+                </CardDescription>
               </CardHeader>
+              <CardContent className="text-sm text-gray-500">
+                <p>소유자: {folder.nickname}</p>
+                <p>타입: {folder.folderType}</p>
+              </CardContent>
               <CardFooter className="pt-2">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => handleSelectFolder(folder)}
+                >
                   폴더 내용 보기
                 </Button>
               </CardFooter>
@@ -84,7 +118,7 @@ export function FavoriteFolders() {
         </div>
       ) : (
         <div className="p-8 text-center text-gray-500 border rounded-md">
-          <p>아직 불러온 폴더가 없습니다.</p>
+          <p>폴더가 없거나 로그인이 필요합니다.</p>
           <p className="text-sm mt-2">
             오른쪽 상단의 '폴더 가져오기' 버튼을 클릭하세요.
           </p>

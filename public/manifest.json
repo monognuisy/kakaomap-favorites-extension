@@ -6,6 +6,25 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["activeTab", "cookies", "tabs"],
-  "host_permissions": ["*://*.kakao.com/*", "*://*.daum.net/*"]
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "activeTab",
+    "cookies",
+    "tabs",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
+  ],
+  "host_permissions": ["*://*.kakao.com/*", "*://*.daum.net/*"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
 }

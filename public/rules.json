@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://map.kakao.com/"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||map.kakao.com/folder/list.json",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Referer",
+          "operation": "set",
+          "value": "https://map.kakao.com/"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||map.kakao.com/favorite/list.json",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://map.kakao.com"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||map.kakao.com/folder/list.json",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        {
+          "header": "Origin",
+          "operation": "set",
+          "value": "https://map.kakao.com"
+        }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||map.kakao.com/favorite/list.json",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]
