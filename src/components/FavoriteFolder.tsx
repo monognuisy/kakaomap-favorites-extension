@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -63,8 +62,8 @@ export function FavoriteFolders() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-md font-semibold">즐겨찾기 폴더</h2>
+      <div className="flex justify-between items-center fixed top-0 left-0 right-0 bg-white p-4">
+        <h2 className="text-lg font-semibold">즐겨찾기 폴더</h2>
         <Button onClick={fetchFolders} disabled={loading}>
           {loading ? '로딩 중...' : '폴더 가져오기'}
         </Button>
@@ -92,27 +91,17 @@ export function FavoriteFolders() {
       ) : folders.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {folders.map((folder) => (
-            <Card key={folder.folderId} className="overflow-hidden">
-              <CardHeader className="pb-2">
+            <Card
+              key={folder.folderId}
+              className="overflow-hidden cursor-pointer py-4"
+              onClick={() => handleSelectFolder(folder)}
+            >
+              <CardHeader className="">
                 <CardTitle className="text-lg">{folder.title}</CardTitle>
                 <CardDescription>
                   장소 {folder.favoriteCount || 0}개
                 </CardDescription>
               </CardHeader>
-              <CardContent className="text-sm text-gray-500">
-                <p>소유자: {folder.nickname}</p>
-                <p>타입: {folder.folderType}</p>
-              </CardContent>
-              <CardFooter className="pt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => handleSelectFolder(folder)}
-                >
-                  폴더 내용 보기
-                </Button>
-              </CardFooter>
             </Card>
           ))}
         </div>

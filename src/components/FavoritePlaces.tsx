@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -55,8 +54,8 @@ export function FavoritePlaces({
   }, [fetchPlaces]);
 
   // 카카오맵에서 장소 열기
-  const openInKakaoMap = (placeUrl: string = '') => {
-    window.open(placeUrl, '_blank');
+  const openInKakaoMap = (placeKey: string = '') => {
+    window.open(`https://place.map.kakao.com/${placeKey}`, '_blank');
   };
 
   return (
@@ -98,15 +97,16 @@ export function FavoritePlaces({
       ) : places.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {places.map((place) => (
-            <Card key={place.seq} className="overflow-hidden">
+            <Card
+              key={place.seq}
+              className="overflow-hidden cursor-pointer py-4"
+              onClick={() => openInKakaoMap(place.key)}
+            >
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg">{place.display1}</CardTitle>
                 <CardDescription>{place.display2}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <div className="text-sm">
-                  <p className="text-gray-700">주소: {place.display2}</p>
-                </div>
                 {place.memo && (
                   <div className="text-sm bg-gray-50 p-2 rounded-md">
                     <p className="text-md font-medium">메모</p>
@@ -117,16 +117,6 @@ export function FavoritePlaces({
                   <p>추가: {formatDate(place.createdAt)}</p>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => openInKakaoMap()}
-                >
-                  카카오맵에서 보기
-                </Button>
-              </CardFooter>
             </Card>
           ))}
         </div>
