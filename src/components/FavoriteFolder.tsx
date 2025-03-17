@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,6 +10,13 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { getFavoriteFolders, KakaoMapFolder } from '@/lib/api';
 import { FavoritePlaces } from './FavoritePlaces';
+import { saveToStorage, getFromStorage } from '@/lib/storage';
+
+// 스토리지 키 상수
+const STORAGE_KEYS = {
+  FOLDERS: 'kakaomap_folders',
+  SELECTED_FOLDER: 'kakaomap_selected_folder',
+};
 
 export function FavoriteFolders() {
   const [folders, setFolders] = useState<KakaoMapFolder[]>([]);
@@ -18,6 +25,47 @@ export function FavoriteFolders() {
   const [selectedFolder, setSelectedFolder] = useState<KakaoMapFolder | null>(
     null,
   );
+
+  // 컴포넌트 마운트 시 스토리지에서 데이터 로드
+  useEffect(() => {
+    const loadDataFromStorage = async () => {
+      try {
+        // 폴더 목록 로드
+        const savedFolders = await getFromStorage<KakaoMapFolder[]>(
+          STORAGE_KEYS.FOLDERS,
+          [],
+        );
+        if (savedFolders.length > 0) {
+          setFolders(savedFolders);
+        }
+
+        // 선택된 폴더 로드
+        const savedSelectedFolder = await getFromStorage<KakaoMapFolder | null>(
+          STORAGE_KEYS.SELECTED_FOLDER,
+          null,
+        );
+        if (savedSelectedFolder) {
+          setSelectedFolder(savedSelectedFolder);
+        }
+      } catch (err) {
+        console.error('스토리지에서 데이터를 로드하는데 실패했습니다:', err);
+      }
+    };
+
+    loadDataFromStorage();
+  }, []);
+
+  // 폴더 목록이 변경될 때 스토리지에 저장
+  useEffect(() => {
+    if (folders.length > 0) {
+      saveToStorage(STORAGE_KEYS.FOLDERS, folders);
+    }
+  }, [folders]);
+
+  // 선택된 폴더가 변경될 때 스토리지에 저장
+  useEffect(() => {
+    saveToStorage(STORAGE_KEYS.SELECTED_FOLDER, selectedFolder);
+  }, [selectedFolder]);
 
   const fetchFolders = async () => {
     setLoading(true);

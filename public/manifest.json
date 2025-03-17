@@ -15,7 +15,8 @@
     "cookies",
     "tabs",
     "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "declarativeNetRequestFeedback",
+    "storage"
   ],
   "host_permissions": ["*://*.kakao.com/*", "*://*.daum.net/*"],
   "declarative_net_request": {

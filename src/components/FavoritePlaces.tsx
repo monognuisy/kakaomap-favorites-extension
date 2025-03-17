@@ -10,12 +10,16 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { getFavoritePlaces, KakaoMapFavorite } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
+import { saveToStorage, getFromStorage } from '@/lib/storage';
 
 interface FavoritePlacesProps {
   folderId: number;
   folderTitle: string;
   onBack: () => void;
 }
+
+// 스토리지 키 상수
+const getPlacesStorageKey = (folderId: number) => `kakaomap_places_${folderId}`;
 
 export function FavoritePlaces({
   folderId,
@@ -48,15 +52,43 @@ export function FavoritePlaces({
     }
   }, [folderId]);
 
-  // 컴포넌트가 마운트될 때 즐겨찾기 가져오기
-  useEffect(() => {
-    fetchPlaces();
-  }, [fetchPlaces]);
-
   // 카카오맵에서 장소 열기
   const openInKakaoMap = (placeKey: string = '') => {
     window.open(`https://place.map.kakao.com/${placeKey}`, '_blank');
   };
+
+  // 컴포넌트 마운트 시 스토리지에서 데이터 로드
+  useEffect(() => {
+    const loadDataFromStorage = async () => {
+      try {
+        const storageKey = getPlacesStorageKey(folderId);
+        const savedPlaces = await getFromStorage<KakaoMapFavorite[]>(
+          storageKey,
+          [],
+        );
+
+        if (savedPlaces.length > 0) {
+          setPlaces(savedPlaces);
+        } else {
+          // 저장된 데이터가 없으면 API에서 가져오기
+          fetchPlaces();
+        }
+      } catch (err) {
+        console.error('스토리지에서 데이터를 로드하는데 실패했습니다:', err);
+        fetchPlaces();
+      }
+    };
+
+    loadDataFromStorage();
+  }, [folderId, fetchPlaces]);
+
+  // 장소 목록이 변경될 때 스토리지에 저장
+  useEffect(() => {
+    if (places.length > 0) {
+      const storageKey = getPlacesStorageKey(folderId);
+      saveToStorage(storageKey, places);
+    }
+  }, [places, folderId]);
 
   return (
     <div className="space-y-4">
